@@ -3,7 +3,7 @@ import uuid
 class Node:
     """A Diagram Node"""
     def __init__(self, name):
-        self.id = name
+        self.id = uuid.uuid4()
         self.name = name
 
     def __repr__(self):
