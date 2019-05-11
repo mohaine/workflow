@@ -3,10 +3,10 @@ import uuid
 class Node:
     """A Diagram Node"""
     def __init__(self, name):
-        self.id = uuid.uuid4()
+        self.id = name
         self.name = name
 
-    def __str__(self):
+    def __repr__(self):
         return "Node({})".format(self.name)
 
 class Diagram(Node):
@@ -19,6 +19,15 @@ class Diagram(Node):
         self.nodes.update(other.nodes)
         return self
 
+    def __getitem__(self, id):
+        for n in self.nodes:
+            if n.id == id:
+                return n
+        return None
+
+
+
+
 
 class _NodeAccumulator:
     def __init__(self, node):
@@ -27,7 +36,6 @@ class _NodeAccumulator:
         self.nodes.add(node)
 
     def __rshift__(self, next):
-        print("{} -> {}".format(self.current, next))
         self.current.transition(next)
         self.nodes.add(next)
         self.current = next
@@ -48,5 +56,10 @@ class FlowNode(Node):
         accum = _NodeAccumulator(self)
         return accum >> next
 
-    def __str__(self):
+    def __repr__(self):
         return "Flow({})".format(self.name)
+
+
+class JoinNode(FlowNode):
+    def __repr__(self):
+        return "Join({})".format(self.name)
